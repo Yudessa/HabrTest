@@ -2,6 +2,7 @@ package org.example;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -33,6 +34,7 @@ public class MainPageTest {
     }
 
     @Test
+    @DisplayName("Переход на страницу с правилами сайта")
     public void changeLogTest() {
         WebElement webLink = driver.findElement(By.xpath("//a[contains(., 'Устройство сайта')]"));
         webLink.click();
@@ -41,7 +43,8 @@ public class MainPageTest {
     }
 
     @Test
-    public void forgotPasswordTest() throws InterruptedException {
+    @DisplayName("Переход на форму восстановления пароля")
+    public void forgotPasswordTest() {
         WebElement enter = driver.findElement(By.cssSelector(".btn"));
         enter.click();
 
@@ -51,6 +54,18 @@ public class MainPageTest {
         forgotPassword.click();
 
         assertTrue(driver.findElement(By.cssSelector(".button.button_wide.button_primary")).isDisplayed(), "Нет перехода на форму восстановления пароля");
+    }
+
+    @Test
+    @DisplayName("Смена языка интерфейса")
+    public void changeLanguage() {
+        WebElement settings = driver.findElement(By.xpath("//button[@data-test-id=\"user-menu-settings\"]"));
+        settings.click();
+
+        assertTrue(driver.findElement(By.cssSelector(".tm-page-settings-form__title")).isDisplayed(), "Нет перехода на страницу настроек");
+
+        WebElement engLanguage = driver.findElement(By.xpath("//div[@data-test-id='checkbox-labeled-input_ui']"));
+        engLanguage.click();
     }
 }
 
