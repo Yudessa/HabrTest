@@ -10,9 +10,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
 import java.time.Duration;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MainPageTest {
@@ -36,10 +34,23 @@ public class MainPageTest {
 
     @Test
     public void changeLogTest() {
-        WebElement webLink = driver.findElement(By.xpath("//*[contains(text(), 'Устройство сайта')]"));
+        WebElement webLink = driver.findElement(By.xpath("//a[contains(., 'Устройство сайта')]"));
         webLink.click();
 
-        assertTrue(driver.findElement(By.xpath("//*[contains(text(), 'Changelog')]")).isDisplayed(), "Changelog не найден");
+        assertTrue(driver.findElement(By.xpath("//a[@href='/ru/docs/changelog/']")).isDisplayed(), "Changelog не найден");
+    }
+
+    @Test
+    public void forgotPasswordTest() throws InterruptedException {
+        WebElement enter = driver.findElement(By.cssSelector(".btn"));
+        enter.click();
+
+        assertTrue(driver.findElement(By.cssSelector(".form__remind-password-link")).isDisplayed(), "Нет перехода на форму авторизации");
+
+        WebElement forgotPassword = driver.findElement(By.cssSelector(".form__remind-password-link"));
+        forgotPassword.click();
+
+        assertTrue(driver.findElement(By.cssSelector(".button.button_wide.button_primary")).isDisplayed(), "Нет перехода на форму восстановления пароля");
     }
 }
 
