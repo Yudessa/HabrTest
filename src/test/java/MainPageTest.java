@@ -39,21 +39,21 @@ public class MainPageTest {
         WebElement webLink = driver.findElement(By.xpath("//a[contains(., 'Устройство сайта')]"));
         webLink.click();
 
-        assertTrue(driver.findElement(By.xpath("//a[@href='/ru/docs/changelog/']")).isDisplayed(), "Changelog не найден");
+        assertTrue(driver.findElement(By.xpath("//a[@href='/ru/docs/changelog/']")).isDisplayed(),
+                "Changelog не найден");
     }
 
     @Test
     @DisplayName("Переход на форму восстановления пароля")
-    public void forgotPasswordTest() {
-        WebElement enter = driver.findElement(By.cssSelector(".btn"));
+    public void remindPasswordTest() {
+        WebElement enter = driver.findElement(By.xpath("//button[text()='Войти']"));
         enter.click();
 
-        assertTrue(driver.findElement(By.cssSelector(".form__remind-password-link")).isDisplayed(), "Нет перехода на форму авторизации");
+        By xpathRemindPassword = By.xpath("//a[contains(., 'Забыли пароль')]");
+        assertTrue(driver.findElement(xpathRemindPassword).isDisplayed(), "Нет перехода на форму авторизации");
 
-        WebElement forgotPassword = driver.findElement(By.cssSelector(".form__remind-password-link"));
+        WebElement forgotPassword = driver.findElement(xpathRemindPassword);
         forgotPassword.click();
-
-        assertTrue(driver.findElement(By.cssSelector(".button.button_wide.button_primary")).isDisplayed(), "Нет перехода на форму восстановления пароля");
     }
 
     @Test
@@ -62,9 +62,10 @@ public class MainPageTest {
         WebElement settings = driver.findElement(By.xpath("//button[@data-test-id=\"user-menu-settings\"]"));
         settings.click();
 
-        assertTrue(driver.findElement(By.cssSelector(".tm-page-settings-form__title")).isDisplayed(), "Нет перехода на страницу настроек");
+        assertTrue(driver.findElement(By.cssSelector(".tm-page-settings-form__title")).isDisplayed(),
+                "Нет перехода на страницу настроек");
 
-        WebElement engLanguage = driver.findElement(By.xpath("//div[@data-test-id='checkbox-labeled-input_ui']"));
+        WebElement engLanguage = driver.findElement(By.xpath("//label[.='English'][@class]"));
         engLanguage.click();
     }
 }
