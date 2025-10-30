@@ -1,5 +1,6 @@
 package org.example;
 
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +35,7 @@ public class MainPageTest {
     }
 
     @Test
+    @Step("Переход на страницу с правилами сайта")
     @DisplayName("Переход на страницу с правилами сайта")
     public void changeLogTest() {
         WebElement webLink = driver.findElement(By.xpath("//a[contains(., 'Устройство сайта')]"));
@@ -44,6 +46,7 @@ public class MainPageTest {
     }
 
     @Test
+    @Step("Переход на форму восстановления пароля")
     @DisplayName("Переход на форму восстановления пароля")
     public void remindPasswordTest() {
         WebElement enter = driver.findElement(By.xpath("//button[text()='Войти']"));
