@@ -3,9 +3,8 @@ package com.example.HabrTests.pages;
 
 import com.example.HabrTests.AllureLogger;
 import io.qameta.allure.Step;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -13,39 +12,23 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.Selectors.byCssSelector;
+import static com.codeborne.selenide.Selectors.byXpath;
+
 public class AuthHabr {
     private final AllureLogger LOG = new AllureLogger(LoggerFactory.getLogger(AuthHabr.class));
     private WebDriver driver;
 
-    @FindBy(css = "input[type='email']")
-    private WebElement emailInput;
-
-    @FindBy(css = "input[type='password']")
-    private WebElement passwordInput;
-
-    @FindBy(xpath = "//a[contains(@class, 'tm-header-user-menu__login')]")
-    private WebElement enterButton;
-
-    @FindBy(xpath = "//button[contains(@class,'button button_wide button_primary')]")
-    private WebElement nextRecoveryPasswordButton;
-
-    @FindBy(xpath = "//button[contains(@class,'socials-buttons__button_github')]")
-    private WebElement enterWithGitHubButton;
-
-    @FindBy(xpath = "//button[contains(@class,'button button_wide button_primary')]")
-    private WebElement loginButton;
-
-    @FindBy(xpath = "//a[@href='/ru/docs/changelog/']")
-    private WebElement changelogLink;
-
-    @FindBy(xpath = "//a[contains(., 'Забыли пароль')]")
-    private WebElement remindPassword;
-
-    @FindBy(xpath = "//div[normalize-space()='Восстановление пароля']")
-    private WebElement recoveryForm;
-
-    @FindBy(css = "input[type='email']:invalid")
-    private WebElement invalidEmailInput;
+    private final By emailInputBy = byCssSelector("input[type='email']");
+    private final By passwordInputBy = byCssSelector("input[type='password']");
+    private final By enterButtonBy = byXpath("//a[contains(@class, 'tm-header-user-menu__login')]");
+    // развести кнопки private final By nextRecoveryPasswordButtonBy = byXpath("//button[contains(@class,'button button_wide button_primary')]");
+    private final By enterWithGitHubButtonBy = byXpath("//button[contains(@class,'socials-buttons__button_github')]");
+    // private final By loginButtonBy = byXpath("//button[contains(@class,'button button_wide button_primary')]");
+    private final By changelogLinkBy = byXpath("//a[@href='/ru/docs/changelog/']");
+    private final By remindPasswordBy = byXpath("//a[contains(., 'Забыли пароль')]");
+    private final By recoveryFormBy = byXpath("//div[normalize-space()='Восстановление пароля']");
+    private final By invalidEmailInputBy = byCssSelector("input[type='email']:invalid");
 
     public AuthHabr(WebDriver driver) {
         this.driver = driver;
