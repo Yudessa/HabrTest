@@ -172,6 +172,7 @@ public class MainPageHabr {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(burgerButton));
     }
+
     public void assertSettingsMenuOpened() {
 
         // 1) Попап должен стать видимым
