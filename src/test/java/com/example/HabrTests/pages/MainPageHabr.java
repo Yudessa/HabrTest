@@ -13,11 +13,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
-import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MainPageHabr {
     private final AllureLogger LOG = new AllureLogger(LoggerFactory.getLogger(MainPageHabr.class));
     private WebDriver driver;
+    private final WebDriverWait wait;
 
     @FindBy(xpath = "//a[contains(., 'Устройство сайта')]")
     private WebElement rulesPage;
@@ -58,6 +60,12 @@ public class MainPageHabr {
     @FindBy(xpath = "//div[contains(@class, 'navigation-wrapper')]")
     private WebElement burgerMenuContainer;
 
+    private final By settingsPopupBody = By.cssSelector(".tm-popup-base__body");
+    private final By settingsForm = By.cssSelector(".tm-popup-base__body form.tm-page-settings-form");
+    private final By settingsTitle = By.cssSelector(".tm-popup-base__body .tm-page-settings-form__title");
+    private final By uiEnglishRadio = By.id("uiEnglish");
+
+
     public String getSavePreferencesText() {
         return savePreferencesButton.getText().trim();
     }
@@ -80,10 +88,19 @@ public class MainPageHabr {
 
     @Step("Нажатие кнопки «Настройки» и ожидание открытия попапа")
     public void goToSettingsMenu() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        wait.until(ExpectedConditions.elementToBeClickable(settingsMenuButton));
         settingsMenuButton.click();
 
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("uiEnglish")));
+        if (driver.findElements(By.cssSelector(".tm-popup-base__body")).isEmpty()) {
+            settingsMenuButton.click();
+        }
+
+        // ждём попап
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector(".tm-popup-base__body")
+        ));
     }
 
     @Step("Проверка кликабельности кнопки «Поиск»")
@@ -111,6 +128,7 @@ public class MainPageHabr {
 
     public MainPageHabr(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         PageFactory.initElements(driver, this);
     }
 
@@ -153,5 +171,24 @@ public class MainPageHabr {
     public void checkBurgerButtonClickable() {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(burgerButton));
+    }
+
+    public void assertSettingsMenuOpened() {
+
+        // 1) Попап должен стать видимым
+        wait.until(ExpectedConditions.visibilityOfElementLocated(settingsPopupBody));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(settingsForm));
+
+        // 2) Заголовок должен быть "Настройки страницы"
+        WebElement titleEl = wait.until(ExpectedConditions.visibilityOfElementLocated(settingsTitle));
+        String title = titleEl.getText().trim();
+
+        assertTrue(
+                title.equals("Настройки страницы"),
+                "Открылось не то окно. Ожидали заголовок 'Настройки страницы', получили: '" + title + "'"
+        );
+
+        // 3) Дополнительно: дождаться, что языковые радиокнопки уже в DOM
+        wait.until(ExpectedConditions.presenceOfElementLocated(uiEnglishRadio));
     }
 }

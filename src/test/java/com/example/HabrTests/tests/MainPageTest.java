@@ -95,6 +95,7 @@ public class MainPageTest extends BaseTest {
     @DisplayName("Смена языка интерфейса")
     public void changeLanguage() {
         mainPageHabr.goToSettingsMenu();
+        mainPageHabr.assertSettingsMenuOpened();
         mainPageHabr.clickEngLanguage();
         mainPageHabr.waitSavePreferencesTextIs("Save preferences");
         assertTrue(
@@ -102,6 +103,7 @@ public class MainPageTest extends BaseTest {
                 "Текст кнопки сохранения не переключился на английский"
         );
     }
+
     @Test
     @DisplayName("Кликабельность бургер-кнопки")
     public void burgerButtonIsClickable() {

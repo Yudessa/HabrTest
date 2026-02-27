@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
+
 public class AuthHabr {
     private final AllureLogger LOG = new AllureLogger(LoggerFactory.getLogger(AuthHabr.class));
     private WebDriver driver;
