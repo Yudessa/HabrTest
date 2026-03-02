@@ -29,6 +29,12 @@ public class MainPageHabr {
     private final SelenideElement burgerMenuContainer = $x("//div[contains(@class, 'navigation-wrapper')]");
     private final SelenideElement settingsForm = $("form.tm-page-settings-form");
 
+    private final By settingsPopupBody = By.cssSelector(".tm-popup-base__body");
+    private final By settingsForm = By.cssSelector(".tm-popup-base__body form.tm-page-settings-form");
+    private final By settingsTitle = By.cssSelector(".tm-popup-base__body .tm-page-settings-form__title");
+    private final By uiEnglishRadio = By.id("uiEnglish");
+
+
     public String getSavePreferencesText() {
         return savePreferencesButton.getText().trim();
     }
@@ -49,6 +55,9 @@ public class MainPageHabr {
 
     @Step("Нажатие кнопки «Настройки» и ожидание открытия попапа")
     public void goToSettingsMenu() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        wait.until(ExpectedConditions.elementToBeClickable(settingsMenuButton));
         settingsMenuButton.click();
         settingsForm.shouldBe(visible);
     }
