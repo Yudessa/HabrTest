@@ -37,7 +37,7 @@ public class AuthHabr {
         remindPassword.click();
     }
 
-    @Step("Нажатие кнопки «Войти» на форме авторизации")
+    @Step("Нажатие кнопки «Войти» на главной странице")
     public void clickLoginButton() {
         loginButton.click();
     }
