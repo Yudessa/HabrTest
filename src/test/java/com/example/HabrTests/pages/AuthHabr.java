@@ -1,59 +1,39 @@
 package com.example.HabrTests.pages;
-//URL https://www.habr.com/
 
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import com.example.HabrTests.AllureLogger;
 import io.qameta.allure.Step;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.WebDriverRunner.url;
 
 
 public class AuthHabr {
-    private final AllureLogger LOG = new AllureLogger(LoggerFactory.getLogger(AuthHabr.class));
-    private WebDriver driver;
 
-    @FindBy(css = "input[type='email']")
-    private WebElement emailInput;
+    private final AllureLogger LOG =
+            new AllureLogger(LoggerFactory.getLogger(AuthHabr.class));
 
-    @FindBy(css = "input[type='password']")
-    private WebElement passwordInput;
+    private final SelenideElement emailInput = $("input[type='email']");
+    private final SelenideElement passwordInput = $("input[type='password']");
+    private final SelenideElement enterButton =
+            $x("//a[contains(@class, 'tm-header-user-menu__login')]");
+    private final SelenideElement enterWithGitHubButton =
+            $x("//button[contains(@class,'socials-buttons__button_github')]");
+    private final SelenideElement remindPassword =
+            $x("//a[contains(., 'Забыли пароль')]");
+    private final SelenideElement recoveryForm =
+            $x("//div[normalize-space()='Восстановление пароля']");
+    private final SelenideElement invalidEmailInput =
+            $("input[type='email']:invalid");
+    private final SelenideElement loginButton =
+            $x("//button[contains(@class,'button button_wide button_primary')]");
+    private final SelenideElement nextRecoveryPasswordButton =
+            $x("//button[contains(@class,'button button_wide button_primary')]");
 
-    @FindBy(xpath = "//a[contains(@class, 'tm-header-user-menu__login')]")
-    private WebElement enterButton;
-
-    @FindBy(xpath = "//button[contains(@class,'button button_wide button_primary')]")
-    private WebElement nextRecoveryPasswordButton;
-
-    @FindBy(xpath = "//button[contains(@class,'socials-buttons__button_github')]")
-    private WebElement enterWithGitHubButton;
-
-    @FindBy(xpath = "//button[contains(@class,'button button_wide button_primary')]")
-    private WebElement loginButton;
-
-    @FindBy(xpath = "//a[@href='/ru/docs/changelog/']")
-    private WebElement changelogLink;
-
-    @FindBy(xpath = "//a[contains(., 'Забыли пароль')]")
-    private WebElement remindPassword;
-
-    @FindBy(xpath = "//div[normalize-space()='Восстановление пароля']")
-    private WebElement recoveryForm;
-
-    @FindBy(css = "input[type='email']:invalid")
-    private WebElement invalidEmailInput;
-
-    public AuthHabr(WebDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
-    }
-
-    @Step("Нажатие кнопки «забыли пароль»")
+    @Step("Нажатие кнопки «Забыли пароль»")
     public void clickRemindPasswordButton() {
         remindPassword.click();
     }
@@ -65,49 +45,48 @@ public class AuthHabr {
 
     @Step("Проверка отображения формы восстановления пароля")
     public boolean isRecoveryFormDisplayed() {
-        return recoveryForm.isDisplayed();
+        return recoveryForm.is(Condition.visible);
     }
 
+    @Step("Проверка отображения кнопки «Войти»")
     public boolean isEnterButtonVisible() {
-        return enterButton.isDisplayed();
+        return enterButton.is(Condition.visible);
     }
 
     @Step("Проверка кликабельности кнопки «Войти»")
     public void checkEnterButtonClickable() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.elementToBeClickable(enterButton));
+        enterButton.shouldBe(Condition.visible)
+                .shouldBe(Condition.enabled);
     }
 
     public boolean isRemindPasswordClickable() {
-        return remindPassword.isEnabled();
+        return remindPassword.is(Condition.visible)
+                && remindPassword.is(Condition.enabled);
     }
 
     @Step("Нажатие кнопки «Войти»")
     public void clickEnter() {
-        LOG.infoWithScreenshot("Нажатие кнопки Войти");
         enterButton.click();
     }
 
     @Step("Проверка отображения кнопки 'Войти через GitHub'")
     public boolean isEnterWithGitHubButton() {
-        return enterWithGitHubButton.isDisplayed();
+        return enterWithGitHubButton.is(Condition.visible);
     }
 
     @Step("Проверить, что форма не отправляется без заполнения email")
     public boolean isEmailFieldInvalid() {
-        return invalidEmailInput.isDisplayed();
+        return invalidEmailInput.is(Condition.exist);
     }
 
     @Step("Ввести email: {email}")
     public void enterEmail(String email) {
-        emailInput.clear();
-        emailInput.sendKeys(email);
+        emailInput.setValue(email);
     }
 
     @Step("Ввести пароль")
     public void enterPassword(String password) {
-        passwordInput.clear();
-        passwordInput.sendKeys(password);
+        passwordInput.setValue(password);
     }
 
     @Step("Ввести логин и пароль")
@@ -117,10 +96,10 @@ public class AuthHabr {
     }
 
     public boolean isOnLoginPage() {
-        return driver.getCurrentUrl().contains("/ident/");
+        return url().contains("/ident/");
     }
 
-    @Step("Отправка формы восстановления пароля на странице восстановления пароля")
+    @Step("Отправка формы восстановления пароля")
     public void clickNextRecoveryPasswordButton() {
         nextRecoveryPasswordButton.click();
     }
