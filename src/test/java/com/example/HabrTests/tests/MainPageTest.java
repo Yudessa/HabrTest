@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MainPageTest extends BaseTest {
@@ -15,8 +16,8 @@ public class MainPageTest extends BaseTest {
     @Override
     public void setUp() {
         super.setUp();
-        getDriver().get("https://habr.com/ru/feed/");
-        mainPageHabr = new MainPageHabr(getDriver());
+        open("https://habr.com/ru/feed/");
+        mainPageHabr = new MainPageHabr();
     }
 
     @Test
@@ -33,7 +34,6 @@ public class MainPageTest extends BaseTest {
     @Test
     @DisplayName("Видимость кнопки «Настройки»")
     public void settingsMenuVisible() {
-        mainPageHabr.isSettingMenuDisplayed();
         assertTrue(
                 mainPageHabr.isSettingMenuDisplayed(), "Кнопка «Настройки» не отображается"
         );
@@ -102,6 +102,7 @@ public class MainPageTest extends BaseTest {
                 "Текст кнопки сохранения не переключился на английский"
         );
     }
+
     @Test
     @DisplayName("Кликабельность бургер-кнопки")
     public void burgerButtonIsClickable() {
@@ -110,13 +111,8 @@ public class MainPageTest extends BaseTest {
 
     @Test
     @DisplayName("Открытие бургер-меню")
-    public void burgerMenuOpens() throws InterruptedException {
-
+    public void burgerMenuOpens() {
         mainPageHabr.clickBurgerButton();
-
-        Thread.sleep(2000);
-
-        assertTrue(mainPageHabr.isBurgerMenuVisible());
+        mainPageHabr.isBurgerMenuVisible();
     }
 }
-

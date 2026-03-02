@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -16,8 +17,8 @@ public class AuthTest extends BaseTest {
     @Override
     public void setUp() {
         super.setUp();
-        getDriver().get("https://www.habr.com/");
-        authHabr = new AuthHabr(getDriver());
+        open("https://habr.com/ru/feed/");
+        authHabr = new AuthHabr();
     }
 
     @Test
@@ -117,4 +118,3 @@ public class AuthTest extends BaseTest {
         );
     }
 }
-

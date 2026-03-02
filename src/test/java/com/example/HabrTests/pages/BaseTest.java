@@ -1,25 +1,21 @@
 package com.example.HabrTests.pages;
 
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.logevents.SelenideLogger;
 import com.example.HabrTests.AllureLogger;
 import io.qameta.allure.Attachment;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.LoggerFactory;
-
-import java.time.Duration;
 
 public class BaseTest {
 
-    private static WebDriver driver;
     protected final AllureLogger LOG;
 
     @RegisterExtension
@@ -38,33 +34,25 @@ public class BaseTest {
 
     @BeforeEach
     public void setUp() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
-
-        driver = new ChromeDriver(chromeOptions);
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-    }
-
-    public static WebDriver getDriver() {
-        return driver;
+        Configuration.browser = "chrome";
+        Configuration.timeout = 10000;
+        Configuration.pageLoadStrategy = "eager";
+        Configuration.browserSize = "1920x1080";
+        Configuration.timeout = 5000;
+        SelenideLogger.addListener("AllureSelenide",
+                new AllureSelenide()
+                        .screenshots(true)
+                        .savePageSource(true)
+        );
     }
 
     @Attachment(value = "Screenshot on failure", type = "image/png")
     public byte[] attachScreenshot() {
-        try {
-            if (driver == null) return new byte[0];
-            return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-        } catch (Exception e) {
-            return new byte[0];
-        }
+        return Selenide.screenshot(OutputType.BYTES);
     }
 
     @AfterEach
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
-        }
+        Selenide.closeWebDriver();
     }
 }
